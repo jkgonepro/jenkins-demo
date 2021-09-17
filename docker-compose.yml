@@ -1,0 +1,35 @@
+### ######################################################## ###
+###                      Jenkins Docker                      ###
+### ######################################################## ###
+version: "3"
+
+networks:
+  network_local_jenkins:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
+        
+services:
+  service_local_jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    container_name: service_local_jenkins
+    #environment:
+      #PHP_EXTENSION_DEBUG: 1
+    restart: on-failure
+
+    ports:
+      - 8080:8080 # tomcat
+      - 50000:5000 # master - slave comunication
+    volumes:
+      ### --------------------------- NGINX  --------------------------
+      # Not :ro
+      # Can not write to /var/jenkins_home/copy_reference_file.log. Wrong volume permissions? 
+      # touch: cannot touch '/var/jenkins_home/copy_reference_file.log': Read-only file system
+      - .\jenkins_home:/var/jenkins_home #:ro
+    ##command:
+      ##- /tmp/install.sh
+    networks:
+      network_local_jenkins:
+        ipv4_address: 172.18.0.2
