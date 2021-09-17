@@ -1,0 +1,3 @@
+!.gitignore
+!jenkins_home/README.md
+jenkins_home/*
